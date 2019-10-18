@@ -113,7 +113,7 @@ def getShebang(content):
     if content[0] == "#" and content[1] == "!":
         content = content.split("\n")
         rest = ""
-        for item in content:
+        for item in content[1:]:
             rest+="{}\n".format(item)
         return content[0] + "\n", rest
         rest = "".join(content[0:])
