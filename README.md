@@ -93,12 +93,14 @@ source-notate -c copyright.txt file1.py file2.py file.sh class.java
 
 Supported languages are:
 
-* sh
+* shell
 * python
 * java
 * c#
 * c
 * c++
+* javascript
+* typescript
 
 More languages should be supported in the future
 
