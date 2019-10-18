@@ -48,14 +48,22 @@ def convertPathToFiles(path):
     If the path is a file it simply returns the file
     """
     if os.path.isfile(path):
-        return path
+        return path, True
     arr = []
     for root, dirs, files in os.walk(path):
         dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
         for f in files:
             arr.append(f)
-    return arr
+    return arr, False
 
+
+def unique(arr):
+    unique_list = []
+
+    for item in arr:
+        if item not in unique_list:
+            unique_list.append(item)
+    return unique_list
 
 def findFiles(array):
     """
@@ -64,24 +72,69 @@ def findFiles(array):
     """
     arr = []
     for path in array:
-        item = convertPathToFiles(path)
-        for obj in item:
-            arr.append(obj)
-    return arr
+        item, isFile = convertPathToFiles(path)
+        if isFile:
+            arr.append(item)
+        else:
+            for obj in item:
+                arr.append(obj)
+    return unique(arr)
+
+class LanguageBuilder:
+    """
+    Detect the language based on the file type
+    We build the appropriate file handler to correctly set the copyright
+    """
+    def __init__(self, path, copyright):
+        self.path = path
+        self.copyright = copyright
+
+    def detect(self):
+        filename, file_extension = os.path.splitext(self.path)
+        e = file_extension
+        if e == ".py":
+            return Python(self.path, self.copyright) 
+        if e == ".c" or  e == ".cpp" or e == ".class" or e == ".java" or e == ".h" or e == ".cs" or e == ".sh":
+            return CLike(self.path, self.copyright)
+        return Blank(self.path, self.copyright)
 
 
-class python:
+class Python:
     """
     Find the location to insert the data
     And converts the data to python comments
     Initialize this class on a per file basis
     """
-    def __init__(self, file, copyright):
-        self.file = file
+    def __init__(self, path, copyright):
+        self.path = path
         self.copyright = copyright
 
     def insert(self):
         print("inserting into file")
+
+class CLike:
+    """
+    Class that handles all file types based on the C syntax
+    """
+    def __init__(self, path, copyright):
+        self.path = path
+        self.copyright = copyright
+
+    def insert(self):
+        print("inserting into file")
+
+class Blank:
+    """
+    Class that handles all file types that are not recognized by this tool
+    It simply prints the filetype to stdout and does nothing more
+    """
+    def __init__(self, path, copyright):
+        self.path = path
+        self.copyright = copyright
+
+    def insert(self):
+        print("Could not determine code. Ommitting {}".format(self.path))
+
 
 if __name__ == "__main__":
         arg = parser()
