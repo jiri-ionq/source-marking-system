@@ -92,14 +92,34 @@ class LanguageBuilder:
     def detect(self):
         filename, file_extension = os.path.splitext(self.path)
         e = file_extension
-        if e == ".py":
-            return Python(self.path, self.copyright) 
-        if e == ".c" or  e == ".cpp" or e == ".class" or e == ".java" or e == ".h" or e == ".cs" or e == ".sh":
+        if e == ".py" or e == ".sh":
+            return ShellLike(self.path, self.copyright) 
+        if e == ".c" or  e == ".cpp" or e == ".class" or e == ".java" or e == ".h" or e == ".cs":
             return CLike(self.path, self.copyright)
         return Blank(self.path, self.copyright)
 
+def readCopyright(filename):
+    with open(filename) as f:
+            lines = f.read().splitlines()
+    return lines
 
-class Python:
+def prefixLines(prefix, lines):
+    arr = []
+    for line in lines:
+        arr.append("{}{}".format(prefix, line))
+    return arr
+
+def getShebang(content):
+    if content[0] == "#" and content[1] == "!":
+        content = content.split("\n")
+        rest = ""
+        for item in content:
+            rest+="{}\n".format(item)
+        return content[0] + "\n", rest
+        rest = "".join(content[0:])
+    return "", rest
+
+class ShellLike:
     """
     Find the location to insert the data
     And converts the data to python comments
@@ -110,8 +130,16 @@ class Python:
         self.copyright = copyright
 
     def insert(self):
-        print("inserting into file")
-
+        print("inserting into file {}".format(self.path))
+        copyright = prefixLines("# ", self.copyright)
+        with open(self.path, 'r+') as f:
+            content = f.read()
+            shebang, content = getShebang(content)
+            f.seek(0, 0)
+            f.write(shebang + "\n")
+            for line in copyright:
+                f.write(line.rstrip('\r\n') + '\n')
+            f.write(content)
 class CLike:
     """
     Class that handles all file types based on the C syntax
@@ -121,7 +149,16 @@ class CLike:
         self.copyright = copyright
 
     def insert(self):
-        print("inserting into file")
+        print("inserting into file {}".format(self.path))
+        copyright = prefixLines(" *  ", self.copyright)
+        with open(self.path, 'r+') as f:
+            content = f.read()
+            f.seek(0, 0)
+            f.write("/*\n")
+            for line in copyright:
+                f.write(line.rstrip('\r\n') + '\n')
+            f.write("*/\n\n")
+            f.write(content)
 
 class Blank:
     """
@@ -138,7 +175,13 @@ class Blank:
 
 if __name__ == "__main__":
         arg = parser()
-        print(arg.source) 
-        print(arg.c) 
-        print("Resolving all directories and files")
-        print(findFiles(arg.source))
+        # convert the copyright file into a list of lines
+        copyright = readCopyright(arg.c)
+        # convert all directories to an array of files
+        files = findFiles(arg.source)
+        
+        for item in files:
+            builder = LanguageBuilder(item, copyright)        
+            fileHandler = builder.detect()
+            fileHandler.insert()
+
