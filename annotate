@@ -1,0 +1,71 @@
+#!/usr/bin/env python3
+
+# MIT License
+#
+# Copyright (c) 2019 Meyers Tom
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+import argparse
+
+DEFAULT_COPYRIGHT_LOCATION="copyright.txt" # location of the copyright file containing your copyright
+DEFAULT_DIRECTORY=["."] # default array of files/directories to scan
+
+
+def parser():
+    """
+    Configuration for argparse module
+    """
+    parser = argparse.ArgumentParser(description='Append copyright to source code.')
+    parser.add_argument('source', metavar='N', nargs='*',
+                    help='list of directories and files', default=DEFAULT_DIRECTORY)
+    parser.add_argument('-c', default=DEFAULT_COPYRIGHT_LOCATION, help='Location of the copyright file')
+
+    args = parser.parse_args()
+    return args
+
+def findFiles(array):
+    """
+    Resolves all paths in an array to all file contained in that path
+    eg it get an array containing direcotries/files and converts it to an array of all files in those directories
+    """
+    return array
+
+
+class python:
+    """
+    Find the location to insert the data
+    And converts the data to python comments
+    Initialize this class on a per file basis
+    """
+    def __init__(self, file, copyright):
+        self.file = file
+        self.copyright = copyright
+
+    def insert(self):
+        print("inserting into file")
+
+
+
+
+
+if __name__ == "__main__":
+        arg = parser()
+        print(arg.source) 
+        print(arg.c) 
