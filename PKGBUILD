@@ -1,6 +1,6 @@
 # Maintainer: Tom Meyers tom@odex.be
 pkgname=source-marking-system-git
-pkgver=r10.06ed04b
+pkgver=r11.339dd95
 pkgrel=1
 pkgdesc="A tool to mark your source code with your copyright/license"
 arch=(any)
