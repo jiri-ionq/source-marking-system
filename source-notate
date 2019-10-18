@@ -98,6 +98,10 @@ class LanguageBuilder:
             return CLike(self.path, self.copyright)
         if e == ".lua":
             return LuaLike(self.path, self.copyright)
+        if e == ".html":
+            return HTMLLike(self.path, self.copyright)
+        if e == ".css":
+            return CSSLike(self.path, self.copyright)
         return Blank(self.path, self.copyright)
 
 def readCopyright(filename):
@@ -161,6 +165,46 @@ class CLike:
             for line in copyright:
                 f.write(line.rstrip('\r\n') + '\n')
             f.write("*/\n\n")
+            f.write(content)
+
+class HTMLLike:
+    """
+    Class that handles all file types based on the HTML syntax
+    """
+    def __init__(self, path, copyright):
+        self.path = path
+        self.copyright = copyright
+
+    def insert(self):
+        print("inserting into file {}".format(self.path))
+        copyright = prefixLines("  ", self.copyright)
+        with open(self.path, 'r+') as f:
+            content = f.read()
+            f.seek(0, 0)
+            f.write("<!--\n")
+            for line in copyright:
+                f.write(line.rstrip('\r\n') + '\n')
+            f.write("-->\n")
+            f.write(content)
+
+class CSSLike:
+    """
+    Class that handles all file types based on the CSS syntax
+    """
+    def __init__(self, path, copyright):
+        self.path = path
+        self.copyright = copyright
+
+    def insert(self):
+        print("inserting into file {}".format(self.path))
+        copyright = prefixLines(" * ", self.copyright)
+        with open(self.path, 'r+') as f:
+            content = f.read()
+            f.seek(0, 0)
+            f.write("/*\n")
+            for line in copyright:
+                f.write(line.rstrip('\r\n') + '\n')
+            f.write("*/\n")
             f.write(content)
 
 class LuaLike:
