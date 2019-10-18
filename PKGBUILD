@@ -25,5 +25,5 @@ build() {
 
 package() {
         cd "$srcdir/$_reponame"
-        install -Dm755 annotate "$pkgdir"/usr/bin/annotate
+        install -Dm755 source-notate "$pkgdir"/usr/bin/source-notate
 }

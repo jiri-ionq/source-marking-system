@@ -75,7 +75,7 @@ pacman -Syu python
 ```
 3. give executable permissions
 ```sh
-chmod +x annotate
+chmod +x source-notate
 ``` 
 
 
@@ -86,9 +86,9 @@ chmod +x annotate
 Create a file called copyright.txt that contains your copyright information.
 All other parameters are directories/files to annotate.
 ```sh
-python annotate -c copyright.txt . 
+python source-notate -c copyright.txt . 
 # or
-annotate -c copyright.txt file1.py file2.py file.sh class.java
+source-notate -c copyright.txt file1.py file2.py file.sh class.java
 ```
 
 Supported languages are:
