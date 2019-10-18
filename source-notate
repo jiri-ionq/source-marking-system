@@ -96,6 +96,8 @@ class LanguageBuilder:
             return ShellLike(self.path, self.copyright) 
         if e == ".js" or e == ".ts" or e == ".c" or  e == ".cpp" or e == ".class" or e == ".java" or e == ".h" or e == ".cs":
             return CLike(self.path, self.copyright)
+        if e == ".lua":
+            return LuaLike(self.path, self.copyright)
         return Blank(self.path, self.copyright)
 
 def readCopyright(filename):
@@ -161,6 +163,25 @@ class CLike:
             f.write("*/\n\n")
             f.write(content)
 
+class LuaLike:
+    """
+    Class that handles all file types based on the Lua comment syntax
+    """
+    def __init__(self, path, copyright):
+        self.path = path
+        self.copyright = copyright
+
+    def insert(self):
+        print("inserting into file {}".format(self.path))
+        copyright = prefixLines("--", self.copyright)
+        with open(self.path, 'r+') as f:
+            content = f.read()
+            f.seek(0, 0)
+            f.write("--[[\n")
+            for line in copyright:
+                f.write(line.rstrip('\r\n') + '\n')
+            f.write("]]\n\n")
+            f.write(content)
 class Blank:
     """
     Class that handles all file types that are not recognized by this tool

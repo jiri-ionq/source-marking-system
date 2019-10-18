@@ -101,6 +101,7 @@ Supported languages are:
 * c++
 * javascript
 * typescript
+* Lua
 
 More languages should be supported in the future
 
