@@ -102,6 +102,10 @@ Supported languages are:
 * javascript
 * typescript
 * Lua
+* HTML
+* CSS
+* Rust
+* Go
 
 More languages should be supported in the future
 
