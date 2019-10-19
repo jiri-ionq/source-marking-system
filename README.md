@@ -106,6 +106,7 @@ Supported languages are:
 * CSS
 * Rust
 * Go
+* Assembly
 
 More languages should be supported in the future
 
