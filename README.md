@@ -40,6 +40,7 @@
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
+* [Speed](#speed)
 * [Usage](#usage)
 * [Roadmap](#roadmap)
 * [Contributing](#contributing)
@@ -77,6 +78,141 @@ pacman -Syu python
 ```sh
 chmod +x source-notate
 ``` 
+
+
+<!-- USAGE EXAMPLES -->
+## Speed
+
+Here is a statistic of speed of adding source files.
+We have executed this program on the UnrealEngine source directory.
+
+Here is some information
+
+```
+Python 3 version
+$ python -v 
+Python 3.7.4
+```
+
+```
+Size of Unreal Engine source including git information (release branch)
+$ du -h Engine/Source | tail -n1
+897M    Engine/Source
+```
+
+
+```
+Information cloc provides (count lines of code) (release branch)
+$ cloc Engine/Source
+    69461 text files.
+   50617 unique files.
+   22822 files ignored.
+
+github.com/AlDanial/cloc v 1.84  T=138.15 s (337.7 files/s, 104124.8 lines/s)
+---------------------------------------------------------------------------------------
+Language                             files          blank        comment           code
+---------------------------------------------------------------------------------------
+C++                                  11003         957588         506815        4287471
+C/C++ Header                         27598         902023        1528039        3765135
+C                                     1866         141670         136754         685664
+C#                                    1647          56770          87592         353941
+XML                                   1086           2813           3532         216014
+HTML                                   985           9377           1500         153411
+MSBuild script                         200              4            460         112243
+Bourne Shell                           180           9377          13360          59596
+JSON                                    66              8              0          57374
+Objective C                            343          11844          14889          56150
+Objective C++                          120           5836           3987          29147
+CMake                                  458           6498           7024          26407
+CSS                                     19           1986            338          19382
+Windows Module Definition              128           1884            395          19002
+Python                                  86           3946          13867          15769
+make                                   411           5202           7551          12654
+Markdown                                76           3087              0          10150
+Perl                                    37           1215            968           6609
+Pascal                                  19            651           5811           6589
+JavaScript                              33           1352           1495           5877
+HLSL                                    59           1178            615           5075
+Java                                    29            730            285           3281
+DOS Batch                              128            923            504           2988
+Windows Resource File                   48            821           1125           2892
+XAML                                     8            174             83           2523
+GLSL                                     6            490            451           2203
+ASP.NET                                  6            259              0           1072
+Ant                                      2             27            108            391
+Expect                                   7             47             44            149
+SAS                                      1             14             22             32
+Bourne Again Shell                       1              0              0              9
+---------------------------------------------------------------------------------------
+SUM:                                 46656        2127794        2337614        9919200
+---------------------------------------------------------------------------------------
+```
+
+As we can see there are over 50000 files! and almost 10 million lines of code.
+This project is the ideal test for this tool.
+We see that `cloc` took 140 seconds to do this on my computer.
+Lets test this project.
+I ran the following command
+```sh
+$ time source-notate -c LICENSE.md Engine/Source
+source-notate -c LICENSE.md Engine/Source  41.19s user 1.87s system 99% cpu 43.182 total
+``` 
+As we can see the tool is relative quick.
+Lets see howmuch comments we have generated.
+
+```sh
+$ cloc Engine/Source
+   69471 text files.
+   50619 unique files.
+   22820 files ignored.
+
+github.com/AlDanial/cloc v 1.84  T=161.07 s (289.7 files/s, 90343.0 lines/s)
+---------------------------------------------------------------------------------------
+Language                             files          blank        comment           code
+---------------------------------------------------------------------------------------
+C++                                  11003         967465         537574        4286455
+C/C++ Header                         27599         929418        1610142        3765193
+C                                     1866         143511         142265         685707
+C#                                    1647          58408          91227         355241
+XML                                   1086           2813           3532         216014
+HTML                                   985           9377           4440         153411
+MSBuild script                         200              4            460         112243
+Bourne Shell                           180           9697          13530          59596
+JSON                                    66              8              0          57374
+Objective C                            343          11844          14889          56150
+Objective C++                          120           5836           3987          29147
+CMake                                  458           6498           7024          26407
+CSS                                     19           1986            395          19382
+Windows Module Definition              128           1884            395          19002
+Python                                  87           4060          13954          15769
+make                                   411           5202           7551          12654
+Markdown                                76           3087              0          10150
+Perl                                    37           1215            968           6609
+Pascal                                  19            651           5811           6589
+JavaScript                              33           1385           1594           5877
+HLSL                                    59           1178            615           5075
+Java                                    29            759            372           3281
+DOS Batch                              128            923            504           2988
+Windows Resource File                   48            821           1125           2892
+XAML                                     8            174             83           2523
+GLSL                                     6            490            451           2203
+ASP.NET                                  6            259              0           1072
+Ant                                      2             27            108            391
+Expect                                   7             47             44            149
+SAS                                      1             14             22             32
+Bourne Again Shell                       1              0              0              9
+---------------------------------------------------------------------------------------
+SUM:                                 46658        2169041        2463062        9919585
+---------------------------------------------------------------------------------------
+```
+
+As you can see we went from 2337614 comments to 2463062 comments.
+That is a difference of 125448 comments.
+Since the Unreal Engine License is only 3 comment +-
+We have inserted Licenses to 41816 files in 41.19s
+This is an average of 1000 files/s which is rather good.
+
+source-marking-system is the way of adding license to your projects!
 
 
 
