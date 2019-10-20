@@ -27,7 +27,7 @@ import os
 
 DEFAULT_COPYRIGHT_LOCATION="LICENSE" # location of the copyright file containing your copyright
 DEFAULT_DIRECTORY=["."] # default array of files/directories to scan
-EXCLUDE_DIRS=[".git"]
+EXCLUDE_DIRS=[".git", ".svn", ".cvs"]
 
 def parser():
     """
