@@ -158,6 +158,15 @@ def getShebang(content):
     rest = "".join(content[0:])
     return "", rest
 
+def stringifyList(list, newline="\n"):
+    """
+    Convert a list of lines in a file to a string containing newlines.
+    """
+    string = ""
+    for item in list:
+        string += item + newline
+    return string
+
 class ShellLike:
     """
     Find the location to insert the data
@@ -173,12 +182,15 @@ class ShellLike:
         copyright = prefixLines("# ", self.copyright)
         with open(self.path, 'r+') as f:
             content = f.read()
-            shebang, content = getShebang(content)
-            f.seek(0, 0)
-            f.write(shebang + "\n")
-            for line in copyright:
-                f.write(line.rstrip('\r\n') + '\n')
-            f.write(content)
+            if not content.__contains__(stringifyList(copyright)):
+                shebang, content = getShebang(content)
+                f.seek(0, 0)
+                f.write(shebang + "\n")
+                for line in copyright:
+                    f.write(line.rstrip('\r\n') + '\n')
+                f.write(content)
+            else:
+                print("Already detected license in {}".format(self.path))
 class CLike:
     """
     Class that handles all file types based on the C syntax
@@ -192,12 +204,15 @@ class CLike:
         copyright = prefixLines(" *  ", self.copyright)
         with open(self.path, 'r+') as f:
             content = f.read()
-            f.seek(0, 0)
-            f.write("/*\n")
-            for line in copyright:
-                f.write(line.rstrip('\r\n') + '\n')
-            f.write("*/\n\n")
-            f.write(content)
+            if not content.__contains__(stringifyList(copyright)):
+                f.seek(0, 0)
+                f.write("/*\n")
+                for line in copyright:
+                    f.write(line.rstrip('\r\n') + '\n')
+                f.write("*/\n\n")
+                f.write(content)
+            else:
+                print("Already detected license in {}".format(self.path))
 class ASMLike:
     """
     Class that handles all file types based on the ASM syntax
@@ -211,10 +226,13 @@ class ASMLike:
         copyright = prefixLines(";  ", self.copyright)
         with open(self.path, 'r+') as f:
             content = f.read()
-            f.seek(0, 0)
-            for line in copyright:
-                f.write(line.rstrip('\r\n') + '\n')
-            f.write(content)
+            if not content.__contains__(stringifyList(copyright)):
+                f.seek(0, 0)
+                for line in copyright:
+                    f.write(line.rstrip('\r\n') + '\n')
+                f.write(content)
+            else:
+                print("Already detected license in {}".format(self.path))
 
 class GOLike:
     """
@@ -229,12 +247,15 @@ class GOLike:
         copyright = prefixLines(" ", self.copyright)
         with open(self.path, 'r+') as f:
             content = f.read()
-            f.seek(0, 0)
-            f.write("`\n")
-            for line in copyright:
-                f.write(line.rstrip('\r\n') + '\n')
-            f.write("`\n\n")
-            f.write(content)
+            if not content.__contains__(stringifyList(copyright)):
+                f.seek(0, 0)
+                f.write("`\n")
+                for line in copyright:
+                    f.write(line.rstrip('\r\n') + '\n')
+                f.write("`\n\n")
+                f.write(content)
+            else:
+                print("Already detected license in {}".format(self.path))
 
 class HTMLLike:
     """
@@ -249,12 +270,15 @@ class HTMLLike:
         copyright = prefixLines("  ", self.copyright)
         with open(self.path, 'r+') as f:
             content = f.read()
-            f.seek(0, 0)
-            f.write("<!--\n")
-            for line in copyright:
-                f.write(line.rstrip('\r\n') + '\n')
-            f.write("-->\n")
-            f.write(content)
+            if not content.__contains__(stringifyList(copyright)):
+                f.seek(0, 0)
+                f.write("<!--\n")
+                for line in copyright:
+                    f.write(line.rstrip('\r\n') + '\n')
+                f.write("-->\n")
+                f.write(content)
+            else:
+                print("Already detected license in {}".format(self.path))
 
 class CSSLike:
     """
@@ -269,12 +293,15 @@ class CSSLike:
         copyright = prefixLines(" * ", self.copyright)
         with open(self.path, 'r+') as f:
             content = f.read()
-            f.seek(0, 0)
-            f.write("/*\n")
-            for line in copyright:
-                f.write(line.rstrip('\r\n') + '\n')
-            f.write("*/\n")
-            f.write(content)
+            if not content.__contains__(stringifyList(copyright)):
+                f.seek(0, 0)
+                f.write("/*\n")
+                for line in copyright:
+                    f.write(line.rstrip('\r\n') + '\n')
+                f.write("*/\n")
+                f.write(content)
+            else:
+                print("Already detected license in {}".format(self.path))
 
 class LuaLike:
     """
@@ -289,12 +316,15 @@ class LuaLike:
         copyright = prefixLines("--", self.copyright)
         with open(self.path, 'r+') as f:
             content = f.read()
-            f.seek(0, 0)
-            f.write("--[[\n")
-            for line in copyright:
-                f.write(line.rstrip('\r\n') + '\n')
-            f.write("]]\n\n")
-            f.write(content)
+            if not content.__contains__(stringifyList(copyright)):
+                f.seek(0, 0)
+                f.write("--[[\n")
+                for line in copyright:
+                    f.write(line.rstrip('\r\n') + '\n')
+                f.write("]]\n\n")
+                f.write(content)
+            else:
+                print("Already detected license in {}".format(self.path))
 class Blank:
     """
     Class that handles all file types that are not recognized by this tool
