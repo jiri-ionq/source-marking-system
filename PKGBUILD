@@ -1,6 +1,6 @@
 # Maintainer: Tom Meyers tom@odex.be
 pkgname=source-marking-system-git
-pkgver=r21.2b1c8a9
+pkgver=r30.a26a83d
 pkgrel=1
 pkgdesc="A tool to mark your source code with your copyright/license"
 arch=(any)
@@ -12,6 +12,7 @@ source=(
 "git+https://github.com/F0xedb/source-marking-system.git")
 md5sums=('SKIP')
 makedepends=('git')
+depends=('python')
 
 pkgver() {
   cd "$srcdir/$_reponame"
