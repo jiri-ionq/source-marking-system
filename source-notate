@@ -27,7 +27,8 @@ import os
 
 DEFAULT_COPYRIGHT_LOCATION="LICENSE" # location of the copyright file containing your copyright
 DEFAULT_DIRECTORY=["."] # default array of files/directories to scan
-EXCLUDE_DIRS=[".git", ".svn", ".cvs"]
+DEFAULT_MODIFY_LIST=["LICENSE", "LICENSE"] # Change all occurenses of DEFAULT_MODIFY_LIST[0] to DEFAULT_MODIFY_LIST[1]
+EXCLUDE_DIRS=[".git", ".svn", ".cvs"] # directories to exclude from the LICENSE file checker
 
 def parser():
     """
@@ -36,7 +37,9 @@ def parser():
     parser = argparse.ArgumentParser(description='Append copyright to source code.')
     parser.add_argument('source', metavar='N', nargs='*',
                     help='list of directories and files', default=DEFAULT_DIRECTORY)
-    parser.add_argument('-c', default=DEFAULT_COPYRIGHT_LOCATION, help='Location of the copyright file')
+    parser.add_argument('-m', '--modify', metavar='N', nargs=2,
+                    help='modify an old license to a new license', default=DEFAULT_MODIFY_LIST)
+    parser.add_argument('-c', '--claim', default=DEFAULT_COPYRIGHT_LOCATION, help='Location of the copyright file')
     parser.add_argument('-l','--language', default=None, help='Treat all files as the language you specify, use the file extention to denote the language')
 
 
@@ -191,6 +194,20 @@ class ShellLike:
                 f.write(content)
             else:
                 print("Already detected license in {}".format(self.path))
+
+    def replace(self, new):
+        """
+        Detect the old copyright claim and replace it with a new version
+        """
+        copyright = stringifyList(prefixLines("# ", self.copyright))
+        newcopyright = stringifyList(prefixLines("# ", new))
+        with open(self.path, 'r+') as f:
+            content = f.read()
+            content = content.replace(copyright, newcopyright)
+            f.seek(0,0)
+            f.write(content)
+            
+
 class CLike:
     """
     Class that handles all file types based on the C syntax
@@ -213,6 +230,17 @@ class CLike:
                 f.write(content)
             else:
                 print("Already detected license in {}".format(self.path))
+    def replace(self, new):
+        """
+        Detect the old copyright claim and replace it with a new version
+        """
+        copyright = stringifyList(prefixLines(" *  ", self.copyright))
+        newcopyright = stringifyList(prefixLines(" *  ", new))
+        with open(self.path, 'r+') as f:
+            content = f.read()
+            content = content.replace(copyright, newcopyright)
+            f.seek(0,0)
+            f.write(content)
 class ASMLike:
     """
     Class that handles all file types based on the ASM syntax
@@ -233,6 +261,17 @@ class ASMLike:
                 f.write(content)
             else:
                 print("Already detected license in {}".format(self.path))
+    def replace(self, new):
+        """
+        Detect the old copyright claim and replace it with a new version
+        """
+        copyright = stringifyList(prefixLines(";  ", self.copyright))
+        newcopyright = stringifyList(prefixLines(";  ", new))
+        with open(self.path, 'r+') as f:
+            content = f.read()
+            content = content.replace(copyright, newcopyright)
+            f.seek(0,0)
+            f.write(content)
 
 class GOLike:
     """
@@ -256,6 +295,17 @@ class GOLike:
                 f.write(content)
             else:
                 print("Already detected license in {}".format(self.path))
+    def replace(self, new):
+        """
+        Detect the old copyright claim and replace it with a new version
+        """
+        copyright = stringifyList(prefixLines(" ", self.copyright))
+        newcopyright = stringifyList(prefixLines(" ", new))
+        with open(self.path, 'r+') as f:
+            content = f.read()
+            content = content.replace(copyright, newcopyright)
+            f.seek(0,0)
+            f.write(content)
 
 class HTMLLike:
     """
@@ -279,6 +329,17 @@ class HTMLLike:
                 f.write(content)
             else:
                 print("Already detected license in {}".format(self.path))
+    def replace(self, new):
+        """
+        Detect the old copyright claim and replace it with a new version
+        """
+        copyright = stringifyList(prefixLines("  ", self.copyright))
+        newcopyright = stringifyList(prefixLines("  ", new))
+        with open(self.path, 'r+') as f:
+            content = f.read()
+            content = content.replace(copyright, newcopyright)
+            f.seek(0,0)
+            f.write(content)
 
 class CSSLike:
     """
@@ -302,6 +363,17 @@ class CSSLike:
                 f.write(content)
             else:
                 print("Already detected license in {}".format(self.path))
+    def replace(self, new):
+        """
+        Detect the old copyright claim and replace it with a new version
+        """
+        copyright = stringifyList(prefixLines(" * ", self.copyright))
+        newcopyright = stringifyList(prefixLines(" * ", new))
+        with open(self.path, 'r+') as f:
+            content = f.read()
+            content = content.replace(copyright, newcopyright)
+            f.seek(0,0)
+            f.write(content)
 
 class LuaLike:
     """
@@ -325,6 +397,17 @@ class LuaLike:
                 f.write(content)
             else:
                 print("Already detected license in {}".format(self.path))
+    def replace(self, new):
+        """
+        Detect the old copyright claim and replace it with a new version
+        """
+        copyright = stringifyList(prefixLines("--", self.copyright))
+        newcopyright = stringifyList(prefixLines("--", new))
+        with open(self.path, 'r+') as f:
+            content = f.read()
+            content = content.replace(copyright, newcopyright)
+            f.seek(0,0)
+            f.write(content)
 class Blank:
     """
     Class that handles all file types that are not recognized by this tool
@@ -336,17 +419,58 @@ class Blank:
 
     def insert(self):
         print("Could not determine code. Ommitting {}".format(self.path))
+    
+    def replace(self, new):
+        """
+        Detect the old copyright claim and replace it with a new version
+        """
+        copyright = stringifyList(self.copyright)
+        newcopyright = stringifyList(new)
+        with open(self.path, 'r+') as f:
+            content = f.read()
+            content = content.replace(copyright, newcopyright)
+            f.seek(0,0)
+            f.write(content)
+
+def NormalMode(arg):
+    """
+    Execute program with normal behaviour.
+    We detect all files and append License to the top
+    """
+    # convert the copyright file into a list of lines
+    copyright = readCopyright(arg.claim)
+    # convert all directories to an array of files
+    files = findFiles(arg.source)
+        
+    for item in files:
+        builder = LanguageBuilder(item, copyright, arg.language)        
+        fileHandler = builder.detect()
+        fileHandler.insert()
+
+def ModifyMode(arg):
+    """
+    Execute program in modify mode.
+    We detect existing licenses in the files and replace then with a newer version
+    The modify flag should be set to execute this function
+    """
+    # convert the copyright file into a list of lines
+    old = readCopyright(arg.modify[0])
+    new = readCopyright(arg.modify[1])
+    # convert all directories to an array of files
+    files = findFiles(arg.source)
+        
+    for item in files:
+        builder = LanguageBuilder(item, old, arg.language)        
+        fileHandler = builder.detect()
+        fileHandler.replace(new)
+
 
 
 if __name__ == "__main__":
         arg = parser()
-        # convert the copyright file into a list of lines
-        copyright = readCopyright(arg.c)
-        # convert all directories to an array of files
-        files = findFiles(arg.source)
+        if arg.modify[0] != arg.modify[1]:
+            ModifyMode(arg)
+        else:
+            NormalMode(arg)
         
-        for item in files:
-            builder = LanguageBuilder(item, copyright, arg.language)        
-            fileHandler = builder.detect()
-            fileHandler.insert()
-
+        
