@@ -219,12 +219,33 @@ source-marking-system is the way of adding license to your projects!
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Create a file called copyright.txt that contains your copyright information.
+Create a file called LICENSE that contains your copyright information.
 All other parameters are directories/files to annotate.
 ```sh
-python source-notate -c copyright.txt . 
+python source-notate --claim LICENSE . 
 # or
-source-notate -c copyright.txt file1.py file2.py file.sh class.java
+source-notate -c LICENSE file1.py file2.py file.sh class.java
+# LICENSE is the default license so you can leave that black
+source-notate file1.py file2.py file.sh class.java
+```
+
+You can also add Licenses to files that the tools fails to detect the language of.
+
+```sh
+source-notate --language py file1 file2.py file3.npy  # treat all files as python code
+source-notate --language c file1 file2.py file3.npy  # treat all files as c code
+source-notate -l asm file1 file2.py file3.npy  # treat all files as assembler
+```
+
+There is also the posibility to change the license to a newer version.
+All you need are 2 files (one containing the old license and one containing the new license)
+Here is how you change the license of a file or directory
+
+```sh
+source-notate --modify old_license new_license file1.py # find the old license in the file and replace it with the new one
+source-notate --m old_license new_license file1.py # find the old license in the file and replace it with the new one
+source-notate --modify old_license new_license . # This also works with directories
+source-notate --modify old_license new_license --language file1 # or other options
 ```
 
 Supported languages are:
