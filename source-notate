@@ -37,6 +37,8 @@ def parser():
     parser.add_argument('source', metavar='N', nargs='*',
                     help='list of directories and files', default=DEFAULT_DIRECTORY)
     parser.add_argument('-c', default=DEFAULT_COPYRIGHT_LOCATION, help='Location of the copyright file')
+    parser.add_argument('-l','--language', default=None, help='Treat all files as the language you specify, use the file extention to denote the language')
+
 
     args = parser.parse_args()
     return args
@@ -89,13 +91,29 @@ class LanguageBuilder:
     Detect the language based on the file type
     We build the appropriate file handler to correctly set the copyright
     """
-    def __init__(self, path, copyright):
+    def __init__(self, path, copyright, language):
+        """
+        If language is set then tread every file as that language.
+        """
         self.path = path
         self.copyright = copyright
+        self.language = language
+
+    def addPoint(self, str):
+        """
+        If the file exstention doesn't start with a point (.) then we prefix it with that
+        """
+        if not str[0] == ".":
+               str = "." + str
+        print(str)
+        return str
 
     def detect(self):
-        filename, file_extension = os.path.splitext(self.path)
-        e = file_extension
+        if  self.language == None:
+            filename, file_extension = os.path.splitext(self.path)
+            e = file_extension
+        else:
+            e = self.addPoint(self.language)
         if e == ".py" or e == ".sh":
             return ShellLike(self.path, self.copyright) 
         if e == ".rs" or e == ".js" or e == ".ts" or e == ".c" or  e == ".cpp" or e == ".class" or e == ".java" or e == ".h" or e == ".cs":
@@ -299,7 +317,7 @@ if __name__ == "__main__":
         files = findFiles(arg.source)
         
         for item in files:
-            builder = LanguageBuilder(item, copyright)        
+            builder = LanguageBuilder(item, copyright, arg.language)        
             fileHandler = builder.detect()
             fileHandler.insert()
 
