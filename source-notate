@@ -41,7 +41,9 @@ def parser():
                     help='modify an old license to a new license', default=DEFAULT_MODIFY_LIST)
     parser.add_argument('-c', '--claim', default=DEFAULT_COPYRIGHT_LOCATION, help='Location of the copyright file')
     parser.add_argument('-l','--language', default=None, help='Treat all files as the language you specify, use the file extention to denote the language')
-
+    parser.add_argument('-v', '--version', action='store_true', help='Print the version number of this tool')
+    parser.add_argument('-d', '--developer', action='store_true', help='Print information about the developer and the github page')
+    parser.add_argument('-os', '--opensource', action='store_true', help='Does the same as -d option')
 
     args = parser.parse_args()
     return args
@@ -475,7 +477,13 @@ def ModifyMode(arg):
 
 if __name__ == "__main__":
         arg = parser()
-        if arg.modify[0] != arg.modify[1]:
+        if arg.version:
+            print("source-marking-system Version 0.1.1")
+        elif arg.developer or arg.opensource:
+            print("Developed by Meyers Tom (tom@odex.be) under the MIT License")
+            print("Contributions are always welkom at https://github.com/F0xedb/source-marking-system")
+            print("Support the developers on github by using the sponsor flag :-)")
+        elif arg.modify[0] != arg.modify[1]:
             ModifyMode(arg)
         else:
             NormalMode(arg)
