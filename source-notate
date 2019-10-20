@@ -58,6 +58,9 @@ def convertPathToFiles(path):
 
 
 def unique(arr):
+    """
+    Remove all duplicate entries of a directory. It Is O(N) efficient
+    """
     unique_list = []
 
     for item in arr:
@@ -80,6 +83,7 @@ def findFiles(array):
                 arr.append(obj)
     return unique(arr)
 
+# TODO: Scan filetype based on the extention and based on the content
 class LanguageBuilder:
     """
     Detect the language based on the file type
@@ -109,6 +113,9 @@ class LanguageBuilder:
         return Blank(self.path, self.copyright)
 
 def readCopyright(filename):
+    """
+    It opens a file and returns a list of lines contained inside that file
+    """
     with open(filename) as f:
             lines = f.read().splitlines()
     return lines
@@ -120,7 +127,11 @@ def prefixLines(prefix, lines):
     return arr
 
 def getShebang(content):
-
+    """
+    Reads out an array of strings
+    And returns the shebang and the rest of the file back.
+    If no shebang is found it will return and empty string followed by the entire file.
+    """
     if len(content) > 2 and  content[0] == "#" and content[1] == "!":
         content = content.split("\n")
         rest = ""
