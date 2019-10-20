@@ -179,10 +179,11 @@ class ShellLike:
     def __init__(self, path, copyright):
         self.path = path
         self.copyright = copyright
+        self.prefix = "# "
 
     def insert(self):
         print("inserting into file {}".format(self.path))
-        copyright = prefixLines("# ", self.copyright)
+        copyright = prefixLines(self.prefix, self.copyright)
         with open(self.path, 'r+') as f:
             content = f.read()
             if not content.__contains__(stringifyList(copyright)):
@@ -199,8 +200,8 @@ class ShellLike:
         """
         Detect the old copyright claim and replace it with a new version
         """
-        copyright = stringifyList(prefixLines("# ", self.copyright))
-        newcopyright = stringifyList(prefixLines("# ", new))
+        copyright = stringifyList(prefixLines(self.prefix, self.copyright))
+        newcopyright = stringifyList(prefixLines(self.prefix, new))
         with open(self.path, 'r+') as f:
             content = f.read()
             content = content.replace(copyright, newcopyright)
@@ -215,10 +216,11 @@ class CLike:
     def __init__(self, path, copyright):
         self.path = path
         self.copyright = copyright
+        self.prefix = " *  "
 
     def insert(self):
         print("inserting into file {}".format(self.path))
-        copyright = prefixLines(" *  ", self.copyright)
+        copyright = prefixLines(self.prefix, self.copyright)
         with open(self.path, 'r+') as f:
             content = f.read()
             if not content.__contains__(stringifyList(copyright)):
@@ -234,8 +236,8 @@ class CLike:
         """
         Detect the old copyright claim and replace it with a new version
         """
-        copyright = stringifyList(prefixLines(" *  ", self.copyright))
-        newcopyright = stringifyList(prefixLines(" *  ", new))
+        copyright = stringifyList(prefixLines(self.prefix, self.copyright))
+        newcopyright = stringifyList(prefixLines(self.prefix, new))
         with open(self.path, 'r+') as f:
             content = f.read()
             content = content.replace(copyright, newcopyright)
@@ -248,10 +250,11 @@ class ASMLike:
     def __init__(self, path, copyright):
         self.path = path
         self.copyright = copyright
+        self.prefix = ";  "
 
     def insert(self):
         print("inserting into file {}".format(self.path))
-        copyright = prefixLines(";  ", self.copyright)
+        copyright = prefixLines(self.prefix, self.copyright)
         with open(self.path, 'r+') as f:
             content = f.read()
             if not content.__contains__(stringifyList(copyright)):
@@ -265,8 +268,8 @@ class ASMLike:
         """
         Detect the old copyright claim and replace it with a new version
         """
-        copyright = stringifyList(prefixLines(";  ", self.copyright))
-        newcopyright = stringifyList(prefixLines(";  ", new))
+        copyright = stringifyList(prefixLines(self.prefix, self.copyright))
+        newcopyright = stringifyList(prefixLines(self.prefix, new))
         with open(self.path, 'r+') as f:
             content = f.read()
             content = content.replace(copyright, newcopyright)
@@ -280,10 +283,11 @@ class GOLike:
     def __init__(self, path, copyright):
         self.path = path
         self.copyright = copyright
+        self.prefix = " "
 
     def insert(self):
         print("inserting into file {}".format(self.path))
-        copyright = prefixLines(" ", self.copyright)
+        copyright = prefixLines(self.prefix, self.copyright)
         with open(self.path, 'r+') as f:
             content = f.read()
             if not content.__contains__(stringifyList(copyright)):
@@ -299,8 +303,8 @@ class GOLike:
         """
         Detect the old copyright claim and replace it with a new version
         """
-        copyright = stringifyList(prefixLines(" ", self.copyright))
-        newcopyright = stringifyList(prefixLines(" ", new))
+        copyright = stringifyList(prefixLines(self.prefix, self.copyright))
+        newcopyright = stringifyList(prefixLines(self.prefix, new))
         with open(self.path, 'r+') as f:
             content = f.read()
             content = content.replace(copyright, newcopyright)
@@ -314,10 +318,11 @@ class HTMLLike:
     def __init__(self, path, copyright):
         self.path = path
         self.copyright = copyright
+        self.prefix = "  "
 
     def insert(self):
         print("inserting into file {}".format(self.path))
-        copyright = prefixLines("  ", self.copyright)
+        copyright = prefixLines(self.prefix, self.copyright)
         with open(self.path, 'r+') as f:
             content = f.read()
             if not content.__contains__(stringifyList(copyright)):
@@ -333,8 +338,8 @@ class HTMLLike:
         """
         Detect the old copyright claim and replace it with a new version
         """
-        copyright = stringifyList(prefixLines("  ", self.copyright))
-        newcopyright = stringifyList(prefixLines("  ", new))
+        copyright = stringifyList(prefixLines(self.prefix, self.copyright))
+        newcopyright = stringifyList(prefixLines(self.prefix, new))
         with open(self.path, 'r+') as f:
             content = f.read()
             content = content.replace(copyright, newcopyright)
@@ -348,10 +353,11 @@ class CSSLike:
     def __init__(self, path, copyright):
         self.path = path
         self.copyright = copyright
+        self.prefix = " * "
 
     def insert(self):
         print("inserting into file {}".format(self.path))
-        copyright = prefixLines(" * ", self.copyright)
+        copyright = prefixLines(self.prefix, self.copyright)
         with open(self.path, 'r+') as f:
             content = f.read()
             if not content.__contains__(stringifyList(copyright)):
@@ -367,8 +373,8 @@ class CSSLike:
         """
         Detect the old copyright claim and replace it with a new version
         """
-        copyright = stringifyList(prefixLines(" * ", self.copyright))
-        newcopyright = stringifyList(prefixLines(" * ", new))
+        copyright = stringifyList(prefixLines(self.prefix, self.copyright))
+        newcopyright = stringifyList(prefixLines(self.prefix, new))
         with open(self.path, 'r+') as f:
             content = f.read()
             content = content.replace(copyright, newcopyright)
@@ -382,10 +388,11 @@ class LuaLike:
     def __init__(self, path, copyright):
         self.path = path
         self.copyright = copyright
+        self.prefix = "--"
 
     def insert(self):
         print("inserting into file {}".format(self.path))
-        copyright = prefixLines("--", self.copyright)
+        copyright = prefixLines(self.prefix, self.copyright)
         with open(self.path, 'r+') as f:
             content = f.read()
             if not content.__contains__(stringifyList(copyright)):
@@ -401,8 +408,8 @@ class LuaLike:
         """
         Detect the old copyright claim and replace it with a new version
         """
-        copyright = stringifyList(prefixLines("--", self.copyright))
-        newcopyright = stringifyList(prefixLines("--", new))
+        copyright = stringifyList(prefixLines(self.prefix, self.copyright))
+        newcopyright = stringifyList(prefixLines(self.prefix, new))
         with open(self.path, 'r+') as f:
             content = f.read()
             content = content.replace(copyright, newcopyright)
