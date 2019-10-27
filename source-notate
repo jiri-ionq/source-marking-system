@@ -481,7 +481,7 @@ if __name__ == "__main__":
             print("source-marking-system Version 0.1.1")
         elif arg.developer or arg.opensource:
             print("Developed by Meyers Tom (tom@odex.be) under the MIT License")
-            print("Contributions are always welkom at https://github.com/F0xedb/source-marking-system")
+            print("Contributions are always welcome at https://github.com/F0xedb/source-marking-system")
             print("Support the developers on github by using the sponsor flag :-)")
         elif arg.modify[0] != arg.modify[1]:
             ModifyMode(arg)
