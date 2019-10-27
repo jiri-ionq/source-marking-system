@@ -264,6 +264,8 @@ Supported languages are:
 * Rust
 * Go
 * Assembly
+* Dockerfile
+* yaml
 
 More languages should be supported in the future
 
