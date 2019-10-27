@@ -118,7 +118,7 @@ class LanguageBuilder:
             e = file_extension
         else:
             e = self.addPoint(self.language)
-        if e == ".py" or e == ".sh":
+        if e == ".py" or e == ".sh" or filename == "Dockerfile" or e == ".yml" or e == ".yaml":
             return ShellLike(self.path, self.copyright) 
         if e == ".rs" or e == ".js" or e == ".ts" or e == ".c" or  e == ".cpp" or e == ".class" or e == ".java" or e == ".h" or e == ".cs":
             return CLike(self.path, self.copyright)
