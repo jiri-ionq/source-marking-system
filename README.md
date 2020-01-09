@@ -266,6 +266,7 @@ Supported languages are:
 * Assembly
 * Dockerfile
 * yaml
+* dart
 
 More languages should be supported in the future
 
