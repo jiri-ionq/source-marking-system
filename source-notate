@@ -190,11 +190,12 @@ class ShellLike:
             content = f.read()
             if not content.__contains__(stringifyList(copyright)):
                 shebang, content = getShebang(content)
-                f.seek(0, 0)
+                f.seek(0)
                 f.write(shebang + "\n")
                 for line in copyright:
                     f.write(line.rstrip('\r\n') + '\n')
                 f.write(content)
+                f.truncate()
             else:
                 print("Already detected license in {}".format(self.path))
 
@@ -207,8 +208,9 @@ class ShellLike:
         with open(self.path, 'r+') as f:
             content = f.read()
             content = content.replace(copyright, newcopyright)
-            f.seek(0,0)
+            f.seek(0)
             f.write(content)
+            f.truncate()
             
 
 class CLike:
@@ -226,12 +228,13 @@ class CLike:
         with open(self.path, 'r+') as f:
             content = f.read()
             if not content.__contains__(stringifyList(copyright)):
-                f.seek(0, 0)
+                f.seek(0)
                 f.write("/*\n")
                 for line in copyright:
                     f.write(line.rstrip('\r\n') + '\n')
                 f.write("*/\n\n")
                 f.write(content)
+                f.truncate()
             else:
                 print("Already detected license in {}".format(self.path))
     def replace(self, new):
@@ -243,8 +246,9 @@ class CLike:
         with open(self.path, 'r+') as f:
             content = f.read()
             content = content.replace(copyright, newcopyright)
-            f.seek(0,0)
+            f.seek(0)
             f.write(content)
+            f.truncate()
 class ASMLike:
     """
     Class that handles all file types based on the ASM syntax
@@ -260,10 +264,11 @@ class ASMLike:
         with open(self.path, 'r+') as f:
             content = f.read()
             if not content.__contains__(stringifyList(copyright)):
-                f.seek(0, 0)
+                f.seek(0)
                 for line in copyright:
                     f.write(line.rstrip('\r\n') + '\n')
                 f.write(content)
+                f.truncate()
             else:
                 print("Already detected license in {}".format(self.path))
     def replace(self, new):
@@ -275,8 +280,9 @@ class ASMLike:
         with open(self.path, 'r+') as f:
             content = f.read()
             content = content.replace(copyright, newcopyright)
-            f.seek(0,0)
+            f.seek(0)
             f.write(content)
+            f.truncate()
 
 class GOLike:
     """
@@ -293,12 +299,13 @@ class GOLike:
         with open(self.path, 'r+') as f:
             content = f.read()
             if not content.__contains__(stringifyList(copyright)):
-                f.seek(0, 0)
+                f.seek(0)
                 f.write("`\n")
                 for line in copyright:
                     f.write(line.rstrip('\r\n') + '\n')
                 f.write("`\n\n")
                 f.write(content)
+                f.truncate()
             else:
                 print("Already detected license in {}".format(self.path))
     def replace(self, new):
@@ -310,8 +317,9 @@ class GOLike:
         with open(self.path, 'r+') as f:
             content = f.read()
             content = content.replace(copyright, newcopyright)
-            f.seek(0,0)
+            f.seek(0)
             f.write(content)
+            f.truncate()
 
 class HTMLLike:
     """
@@ -328,12 +336,13 @@ class HTMLLike:
         with open(self.path, 'r+') as f:
             content = f.read()
             if not content.__contains__(stringifyList(copyright)):
-                f.seek(0, 0)
+                f.seek(0)
                 f.write("<!--\n")
                 for line in copyright:
                     f.write(line.rstrip('\r\n') + '\n')
                 f.write("-->\n")
                 f.write(content)
+                f.truncate()
             else:
                 print("Already detected license in {}".format(self.path))
     def replace(self, new):
@@ -345,8 +354,9 @@ class HTMLLike:
         with open(self.path, 'r+') as f:
             content = f.read()
             content = content.replace(copyright, newcopyright)
-            f.seek(0,0)
+            f.seek(0)
             f.write(content)
+            f.truncate()
 
 class CSSLike:
     """
@@ -369,6 +379,7 @@ class CSSLike:
                     f.write(line.rstrip('\r\n') + '\n')
                 f.write("*/\n")
                 f.write(content)
+                f.truncate()
             else:
                 print("Already detected license in {}".format(self.path))
     def replace(self, new):
@@ -380,8 +391,9 @@ class CSSLike:
         with open(self.path, 'r+') as f:
             content = f.read()
             content = content.replace(copyright, newcopyright)
-            f.seek(0,0)
+            f.seek(0)
             f.write(content)
+            f.truncate()
 
 class LuaLike:
     """
@@ -404,6 +416,7 @@ class LuaLike:
                     f.write(line.rstrip('\r\n') + '\n')
                 f.write("]]\n\n")
                 f.write(content)
+                f.truncate()
             else:
                 print("Already detected license in {}".format(self.path))
     def replace(self, new):
@@ -415,8 +428,9 @@ class LuaLike:
         with open(self.path, 'r+') as f:
             content = f.read()
             content = content.replace(copyright, newcopyright)
-            f.seek(0,0)
+            f.seek(0)
             f.write(content)
+            f.truncate()
 class Blank:
     """
     Class that handles all file types that are not recognized by this tool
@@ -438,8 +452,9 @@ class Blank:
         with open(self.path, 'r+') as f:
             content = f.read()
             content = content.replace(copyright, newcopyright)
-            f.seek(0,0)
+            f.seek(0)
             f.write(content)
+            f.truncate()
 
 def NormalMode(arg):
     """
