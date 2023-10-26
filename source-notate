@@ -116,9 +116,11 @@ class LanguageBuilder:
         if  self.language == None:
             filename, file_extension = os.path.splitext(self.path)
             e = file_extension
+            filename = os.path.basename(filename)
         else:
+            filename = ""
             e = self.addPoint(self.language)
-        if e == ".py" or e == ".sh" or filename == "Dockerfile" or e == ".yml" or e == ".yaml":
+        if e == ".py" or e == ".sh" or filename == "Dockerfile" or e == ".yml" or e == ".yaml" or filename.startswith("Makefile"):
             return ShellLike(self.path, self.copyright) 
         if e == ".dart" or e == ".rs" or e == ".js" or e == ".ts" or e == ".c" or  e == ".cpp" or e == ".class" or e == ".java" or e == ".h" or e == ".cs":
             return CLike(self.path, self.copyright)
@@ -128,7 +130,7 @@ class LanguageBuilder:
             return HTMLLike(self.path, self.copyright)
         if e == ".css":
             return CSSLike(self.path, self.copyright)
-        if e == ".go":
+        if e == ".go" or e == ".proto":
             return GOLike(self.path, self.copyright)
         if e == ".asm":
             return ASMLike(self.path, self.copyright)
@@ -191,9 +193,14 @@ class ShellLike:
             if not content.__contains__(stringifyList(copyright)):
                 shebang, content = getShebang(content)
                 f.seek(0)
-                f.write(shebang + "\n")
+                if len(shebang) > 0:
+                    f.write(shebang + "\n")
+                    f.write("\n")
+                f.write(self.prefix.rstrip() + "\n")
                 for line in copyright:
                     f.write(line.rstrip('\r\n') + '\n')
+                f.write(self.prefix.rstrip() + "\n")
+                f.write("\n")
                 f.write(content)
                 f.truncate()
             else:
@@ -232,7 +239,8 @@ class CLike:
                 f.write("/*\n")
                 for line in copyright:
                     f.write(line.rstrip('\r\n') + '\n')
-                f.write("*/\n\n")
+                f.write(" */\n")
+                f.write("\n")
                 f.write(content)
                 f.truncate()
             else:
@@ -291,7 +299,7 @@ class GOLike:
     def __init__(self, path, copyright):
         self.path = path
         self.copyright = copyright
-        self.prefix = " "
+        self.prefix = "// "
 
     def insert(self):
         print("inserting into file {}".format(self.path))
@@ -300,10 +308,11 @@ class GOLike:
             content = f.read()
             if not content.__contains__(stringifyList(copyright)):
                 f.seek(0)
-                f.write("`\n")
+                f.write("//\n")
                 for line in copyright:
                     f.write(line.rstrip('\r\n') + '\n')
-                f.write("`\n\n")
+                f.write("//\n")
+                f.write("\n")
                 f.write(content)
                 f.truncate()
             else:
