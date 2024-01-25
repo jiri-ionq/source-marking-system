@@ -120,6 +120,8 @@ class LanguageBuilder:
         else:
             filename = ""
             e = self.addPoint(self.language)
+        if e == ".puml":
+            return PlantUMLLike(self.path, self.copyright)
         if e == ".py" or e == ".sh" or filename == "Dockerfile" or e == ".yml" or e == ".yaml" or filename.startswith("Makefile"):
             return ShellLike(self.path, self.copyright) 
         if e == ".dart" or e == ".rs" or e == ".js" or e == ".ts" or e == ".c" or  e == ".cpp" or e == ".class" or e == ".java" or e == ".h" or e == ".cs":
@@ -440,6 +442,7 @@ class LuaLike:
             f.seek(0)
             f.write(content)
             f.truncate()
+
 class Blank:
     """
     Class that handles all file types that are not recognized by this tool
@@ -464,6 +467,55 @@ class Blank:
             f.seek(0)
             f.write(content)
             f.truncate()
+
+class BaseSingleLine:
+    """
+    Base class that handles all file types with comment character(s) for each line
+    """
+    # The default comment character(s) to use if the derived class doesn't specify one.
+    default_comment_chars = "#"
+
+    def __init__(self, path, copyright):
+        if self.comment_chars is None:
+            self.comment_chars = self.default_comment_chars
+        self.path = path
+        self.copyright = copyright
+        self.prefix = "{} ".format(self.comment_chars)
+
+    def insert(self):
+        print("inserting into file {}".format(self.path))
+        copyright = prefixLines(self.prefix, self.copyright)
+        with open(self.path, 'r+') as f:
+            content = f.read()
+            if not content.__contains__(stringifyList(copyright)):
+                f.seek(0)
+                f.write("{}\n".format(self.comment_chars))
+                for line in copyright:
+                    f.write(line.rstrip('\r\n') + '\n')
+                f.write("{}\n".format(self.comment_chars))
+                f.write("\n")
+                f.write(content)
+                f.truncate()
+            else:
+                print("Already detected license in {}".format(self.path))
+
+    def replace(self, new):
+        """
+        Detect the old copyright claim and replace it with a new version
+        """
+        copyright = stringifyList(prefixLines(self.prefix, self.copyright))
+        newcopyright = stringifyList(prefixLines(self.prefix, new))
+        with open(self.path, 'r+') as f:
+            content = f.read()
+            content = content.replace(copyright, newcopyright)
+            f.seek(0)
+            f.write(content)
+            f.truncate()
+
+class PlantUMLLike(BaseSingleLine):
+    def __init__(self, path, copyright):
+        self.comment_chars = "'"
+        super(PlantUMLLike, self).__init__(path, copyright)
 
 def NormalMode(arg):
     """
